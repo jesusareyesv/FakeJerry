@@ -1,9 +1,28 @@
-# FakeJerry
+# FakeJerry 🐭
 
-Firmware that turns a plain ESP32 dev board into a Bluetooth mouse + keyboard
-whose only job is to keep a computer awake. Every few minutes it nudges the
-pointer a few pixels and (optionally) presses Cmd+Tab. Nothing is installed on
-the computer: it just sees a Bluetooth mouse and keyboard.
+[![build](https://github.com/jesusareyesv/FakeJerry/actions/workflows/build.yml/badge.svg)](https://github.com/jesusareyesv/FakeJerry/actions/workflows/build.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+> A mouse that never sleeps, so your laptop doesn't either.
+
+Jerry is the mouse. This one is fake.
+
+FakeJerry is firmware that turns a plain ESP32 dev board into a Bluetooth
+mouse + keyboard whose only job is to keep a computer awake. Every few minutes
+it nudges the pointer a few pixels and (optionally) presses Cmd+Tab. Nothing is
+installed on the computer: it just sees a Bluetooth mouse and keyboard that
+happen to belong to a very punctual, very boring user.
+
+```
+  you: away getting coffee ☕
+  laptop: "still here?"
+  FakeJerry: *wiggles 4 pixels*
+  laptop: "ok cool"
+```
+
+**Why:** long-running jobs (builds, downloads, AI coding sessions) die when an
+idle timer puts the laptop to sleep, and not every machine lets you install a
+keep-awake app. A $5 board on a USB charger does.
 
 ## Hardware
 
@@ -81,6 +100,21 @@ src/web_control.*          WiFi, mDNS, HTTP API and page
 
 HTTP API: `GET /api/status`, `POST /api/toggle`,
 `POST /api/config` (form fields `mouse`, `cmdtab`, in seconds).
+
+## FAQ
+
+**Does it need to be plugged into the computer it keeps awake?**
+No. It only needs power. A phone charger across the room works fine.
+
+**Will it type things into my documents?**
+No. It only ever sends a tiny mouse movement and Cmd+Tab. It never types
+characters or clicks.
+
+**Why does it have a web page?**
+Because walking over to press a button is how they get you.
+
+**Why "Jerry"?**
+The original was also a mouse that was very hard to stop.
 
 ## Troubleshooting
 
