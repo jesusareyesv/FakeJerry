@@ -17,7 +17,7 @@ static const char PAGE[] PROGMEM = R"HTML(<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>" DEVICE_NAME R"HTML(</title>
+<title>)HTML" DEVICE_NAME R"HTML(</title>
 <style>
   body { font-family: -apple-system, system-ui, sans-serif; max-width: 22rem; margin: 2rem auto; padding: 0 1rem; }
   h1 { font-size: 1.4rem; }
@@ -29,7 +29,7 @@ static const char PAGE[] PROGMEM = R"HTML(<!doctype html>
 </style>
 </head>
 <body>
-<h1>" DEVICE_NAME R"HTML(</h1>
+<h1>)HTML" DEVICE_NAME R"HTML(</h1>
 <p>Status: <span id="state">...</span><br><small id="ble"></small></p>
 <button id="toggle">...</button>
 <form id="config">
