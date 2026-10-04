@@ -70,6 +70,10 @@ board reconnects by itself whenever it is powered.
   - Without it, or if the network can't be joined: connect to the open WiFi
     network `FakeJerry` and open `http://192.168.4.1`.
 
+<img src="assets/web-view.png" alt="FakeJerry web page showing the status, a pause/resume button and the two interval fields" width="360">
+
+*The web page, here with the device renamed to "Jerry V1".*
+
 The paused/active state and the intervals survive a power cycle.
 
 ## Configuration
