@@ -2,10 +2,27 @@
 
 #include <Arduino.h>
 
-// Name shown in the Bluetooth pairing list, the fallback WiFi access point
-// and the mDNS hostname (http://fakejerry.local).
+#if __has_include("secrets.h")
+#include "secrets.h"
+#endif
+
+// Each of these can be overridden from secrets.h.
+
+// Name shown in the Bluetooth pairing list and used for the fallback WiFi
+// access point.
+#ifndef DEVICE_NAME
 #define DEVICE_NAME "FakeJerry"
+#endif
+
+// Manufacturer string reported over Bluetooth.
+#ifndef DEVICE_MANUFACTURER
+#define DEVICE_MANUFACTURER DEVICE_NAME
+#endif
+
+// The web page is served at http://<MDNS_HOSTNAME>.local
+#ifndef MDNS_HOSTNAME
 #define MDNS_HOSTNAME "fakejerry"
+#endif
 
 // ESP32 DevKit: BOOT button pulls GPIO0 low, onboard LED is on GPIO2.
 constexpr uint8_t PIN_BUTTON = 0;

@@ -10,10 +10,6 @@
 #include "jiggler.h"
 #include "settings.h"
 
-#if __has_include("secrets.h")
-#include "secrets.h"
-#endif
-
 static WebServer server(80);
 
 static const char PAGE[] PROGMEM = R"HTML(<!doctype html>
@@ -21,7 +17,7 @@ static const char PAGE[] PROGMEM = R"HTML(<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FakeJerry</title>
+<title>" DEVICE_NAME R"HTML(</title>
 <style>
   body { font-family: -apple-system, system-ui, sans-serif; max-width: 22rem; margin: 2rem auto; padding: 0 1rem; }
   h1 { font-size: 1.4rem; }
@@ -33,7 +29,7 @@ static const char PAGE[] PROGMEM = R"HTML(<!doctype html>
 </style>
 </head>
 <body>
-<h1>FakeJerry</h1>
+<h1>" DEVICE_NAME R"HTML(</h1>
 <p>Status: <span id="state">...</span><br><small id="ble"></small></p>
 <button id="toggle">...</button>
 <form id="config">
@@ -110,8 +106,47 @@ static void handleConfig() {
   sendStatus();
 }
 
+#ifdef WIFI_SSID
+static volatile uint8_t lastDisconnectReason = 0;
+
+static void logJoinFailure() {
+  Serial.printf("WiFi join to \"%s\" failed, disconnect reason %u: ", WIFI_SSID, lastDisconnectReason);
+  switch (lastDisconnectReason) {
+    case WIFI_REASON_NO_AP_FOUND:
+      Serial.println("network not found");
+      break;
+    case WIFI_REASON_AUTH_FAIL:
+    case WIFI_REASON_4WAY_HANDSHAKE_TIMEOUT:
+    case WIFI_REASON_HANDSHAKE_TIMEOUT:
+      Serial.println("wrong password or unsupported security mode");
+      break;
+    default:
+      Serial.println("see wifi_err_reason_t in esp_wifi_types.h");
+  }
+
+  // The ESP32 radio is 2.4 GHz only, so a 5 GHz-only network never shows up here.
+  // A scan fails while the station is still retrying the join, so stop it first.
+  WiFi.disconnect();
+  delay(200);
+  int found = WiFi.scanNetworks();
+  if (found < 0) {
+    Serial.println("WiFi scan failed");
+    return;
+  }
+  Serial.printf("Networks visible on 2.4 GHz: %d\n", found);
+  for (int i = 0; i < found; i++) {
+    Serial.printf("  %-32s ch %2d  %d dBm%s\n", WiFi.SSID(i).c_str(), WiFi.channel(i), WiFi.RSSI(i),
+                  WiFi.SSID(i) == WIFI_SSID ? "  <- configured" : "");
+  }
+  WiFi.scanDelete();
+}
+#endif
+
 static bool joinWifi() {
 #ifdef WIFI_SSID
+  WiFi.onEvent(
+      [](WiFiEvent_t event, WiFiEventInfo_t info) { lastDisconnectReason = info.wifi_sta_disconnected.reason; },
+      ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
   WiFi.mode(WIFI_STA);
   WiFi.setHostname(MDNS_HOSTNAME);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -125,7 +160,8 @@ static bool joinWifi() {
     Serial.println(WiFi.localIP());
     return true;
   }
-  Serial.println("WiFi join failed, falling back to access point");
+  logJoinFailure();
+  Serial.println("Falling back to access point");
   WiFi.disconnect(true);
 #endif
   return false;

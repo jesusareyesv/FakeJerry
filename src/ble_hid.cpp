@@ -102,7 +102,7 @@ void bleHidBegin() {
   keyboardInput = hid->getInputReport(REPORT_ID_KEYBOARD);
   mouseInput = hid->getInputReport(REPORT_ID_MOUSE);
 
-  hid->setManufacturer("FakeJerry");
+  hid->setManufacturer(DEVICE_MANUFACTURER);
   hid->setPnp(0x02, 0x303A, 0x0001, 0x0100);  // USB vendor ID source, Espressif VID
   hid->setHidInfo(0x00, 0x01);
   hid->setReportMap((uint8_t*)REPORT_MAP, sizeof(REPORT_MAP));

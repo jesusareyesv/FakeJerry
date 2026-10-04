@@ -58,7 +58,13 @@ The paused/active state and the intervals survive a power cycle.
 Runtime settings (web page): mouse interval, Cmd+Tab interval (0 turns it off).
 Each interval is randomised by ±20 %.
 
-Compile-time settings live in [`include/config.h`](include/config.h): device
+To rename the device (Bluetooth name, access point name, `.local` hostname),
+define `DEVICE_NAME`, `DEVICE_MANUFACTURER` or `MDNS_HOSTNAME` in
+`include/secrets.h`; see [`include/secrets.example.h`](include/secrets.example.h).
+After renaming, remove the old entry from the computer's Bluetooth list and
+pair again, because the old name is cached.
+
+Other compile-time settings live in [`include/config.h`](include/config.h): device
 name, pins, default intervals, nudge distance.
 
 ## Project layout
@@ -84,6 +90,10 @@ HTTP API: `GET /api/status`, `POST /api/toggle`,
   the computer's Bluetooth list and pair again.
 - **Cmd+Tab is annoying:** set its interval to 0. The mouse nudge alone keeps
   the screen awake.
+- **WiFi join fails with "network not found":** the ESP32 radio is 2.4 GHz
+  only. The serial monitor lists the networks it can see; use one of those.
+- **Page loads in Safari or with `curl` but not in Chrome on macOS:** allow the
+  browser under System Settings > Privacy & Security > Local Network.
 - **`fakejerry.local` doesn't resolve:** use the IP from the serial monitor.
 
 ## Notes

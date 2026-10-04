@@ -10,7 +10,8 @@ static Preferences prefs;
 static const char* NAMESPACE = "fakejerry";
 
 void settingsLoad() {
-  prefs.begin(NAMESPACE, true);
+  // Opened read-write so the namespace is created on first boot.
+  prefs.begin(NAMESPACE, false);
   settings.enabled = prefs.getBool("enabled", true);
   settings.mouseIntervalSec = prefs.getUInt("mouseSec", DEFAULT_MOUSE_INTERVAL_SEC);
   settings.cmdTabIntervalSec = prefs.getUInt("cmdTabSec", DEFAULT_CMD_TAB_INTERVAL_SEC);

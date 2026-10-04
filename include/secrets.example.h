@@ -6,3 +6,8 @@
 
 #define WIFI_SSID "your-network"
 #define WIFI_PASSWORD "your-password"
+
+// Optional: rename the device. Uncomment and edit.
+// #define DEVICE_NAME "FakeJerry"          // Bluetooth name and fallback access point name
+// #define DEVICE_MANUFACTURER "FakeJerry"  // Bluetooth manufacturer string, defaults to DEVICE_NAME
+// #define MDNS_HOSTNAME "fakejerry"        // web page at http://<this>.local, no spaces
